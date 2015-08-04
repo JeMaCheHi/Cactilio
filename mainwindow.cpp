@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include "names.h"
 #include "parameters.h"
-#include <QWidget>
+#include <QtWidgets>
 #include <QScrollArea>
 #include <QFileDialog>
 
@@ -84,9 +84,10 @@ void MainWindow::on_actionSave_triggered()
  ****************/
 void MainWindow::about()
 {
-
+    qreal scaleX = qApp->desktop()->logicalDpiX()/96;
+    qreal scaleY = qApp->desktop()->logicalDpiY()/96;
     QDialog about(this, Qt::Dialog | Qt::CustomizeWindowHint);
-    about.setFixedSize(360,200);
+    about.setMinimumSize(380*scaleX,220*scaleY);
 
     QFont font;
     font.setPointSize(12);
@@ -94,46 +95,57 @@ void MainWindow::about()
 
     QLabel image(&about);
     image.setPixmap(QPixmap(":/images/cactilio128.png"));
-    image.move(0, about.y()+20);
 
     QLabel name(PROG_FULLNAME, &about);
+    QPalette pal = name.palette();
+    pal.setColor(QPalette::WindowText, QColor(0,128,16));
+    name.setPalette(pal);
     name.setFont(font);
-    name.setFixedWidth(about.width());
-    name.move(0,10);
+    name.setMinimumWidth(about.width());
     name.setAlignment(Qt::AlignHCenter);
 
     font.setPointSize(8);
     font.setBold(false);
 
-    QLabel desc2(tr("<b>By JeMaCheHi</b><br/>"
+    QLabel aboutText(tr("<b>By JeMaCheHi</b><br/>"
                     "See Cactilio's forum thread at <a href=\"http://forums.qhimm.com/index.php?topic=16275.0\">qhimm forums</a><br/>"
                     "See also the scene.out <a href=\"http://forums.qhimm.com/index.php?topic=15816.0\">research thread</a><br/><br/>"
 
 
                     "<b>Thanks to:</b><br/>"
+                    "sithlord48 for helping me with lots of advices for Qt<br/>"
                     "Shard(for writing an <a href=\"http://wiki.qhimm.com/view/FF8/Encounter_Codes\">encounter list</a>)<br/>"
                     "kaspar01(<a href=\"http://forums.qhimm.com/index.php?topic=15906.msg225667#msg225667\">stage names list</a> to start with)<br/>"
                     "MakiPL and Halfer(battle stages research)<br/>"
                     "myst6re(Deling src as sample to code this :D)<br/>"
                     "kyo-tux(for his <a href=\"http://kyo-tux.deviantart.com/art/GiNUX-126818033\">icon pack</a>)"
                     ), &about);
-    desc2.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
-    desc2.setTextFormat(Qt::RichText);
-    desc2.setOpenExternalLinks(true);
-    desc2.move(image.x() + 128, name.y() + 32);
-    desc2.setFont(font);
+    aboutText.setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
+    aboutText.setTextFormat(Qt::RichText);
+    aboutText.setOpenExternalLinks(true);
+    aboutText.setFont(font);
 
-    QLabel desc3(QString("Programmed with Qt %1").arg(QT_VERSION_STR), &about);
-    QPalette pal = desc3.palette();
-    pal.setColor(QPalette::WindowText, QColor(0xAA,0xAA,0xAA));
-    desc3.setPalette(pal);
-    desc3.move(about.width()-8-desc3.sizeHint().width(), about.height()-8-desc3.sizeHint().height());
-    desc3.setFont(font);
+    QLabel programmedWith(QString(tr("Programmed with Qt %1")).arg(QT_VERSION_STR), &about);
+    programmedWith.setPalette(pal);
+    programmedWith.setFont(font);
 
     QPushButton button(tr("Close"), &about);
-    button.move(8, about.height()-8-button.sizeHint().height());
     connect(&button, SIGNAL(released()), &about, SLOT(close()));
 
+    QHBoxLayout * textLayout = new QHBoxLayout;
+        textLayout->addWidget(&image,0,Qt::AlignCenter);
+        textLayout->addWidget(&aboutText);
+    QHBoxLayout * buttonLayout = new QHBoxLayout;
+        buttonLayout->addWidget(&button,1,Qt::AlignLeft|Qt::AlignBottom);
+        buttonLayout->addSpacing(3);
+        buttonLayout->addWidget(&programmedWith,1,Qt::AlignRight|Qt::AlignBottom);
+    QVBoxLayout * aboutLayout = new QVBoxLayout;
+        aboutLayout->addWidget(&name);
+        aboutLayout->addLayout(textLayout);
+        aboutLayout->addLayout(buttonLayout);
+
+    about.setLayout(aboutLayout);
+    about.setMaximumSize(aboutLayout->maximumSize());
     about.exec();
 }
 
