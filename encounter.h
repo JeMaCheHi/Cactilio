@@ -13,7 +13,7 @@ private:
     quint8 _loadedEn;       //NOT loaded enemies
     quint8 _targetableEn;   //NOT targetable enemies
     quint8 _enabledEn;      //enabled enemies
-    quint16 _coords[8][3];	//8 posible enemies' coordinate
+    qint16 _coords[8][3];	//8 posible enemies' coordinate
     quint8 _enemyID[8];     //who is the enemy?
     quint16 _sect11[8];
     quint16 _sect12[8];
@@ -102,14 +102,14 @@ public:
         return _loadedEn & mask;
     }
 
-    inline quint16 getCoordX(int enm){
+    inline qint16 getCoordX(int enm){
         return _coords[enm][0];
     }
 
-    inline quint16 getCoordY(int enm){
+    inline qint16 getCoordY(int enm){
         return _coords[enm][1];
     }
-    inline quint16 getCoordZ(int enm){
+    inline qint16 getCoordZ(int enm){
         return _coords[enm][2];
     }
     void setCoordX(quint8 enm, int coord);

@@ -144,7 +144,7 @@ QStringList CreateStageList(){
             << "Eshtar City"
             << "Generic Landscape?"
             << "Generic Landscape? (Beach at night?)"
-            << "Deling City (Edea's Room)"
+            << "Commencement Room"
             << "Ultimecia's Castle"
             << "Ultimecia's Castle (Tiamat)"
             << "Ultimecia's Castle"
